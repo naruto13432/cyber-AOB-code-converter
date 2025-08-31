@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cybers - Magic Code Converter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background: radial-gradient(circle at top, #1a0000, #000);
+      color: #ff3c3c;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Zoom container */
+    #scaleContainer {
+      transform-origin: top center;
+      transition: transform 0.3s ease-in-out;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #particles-js { 
+      position: fixed; 
+      width: 100%; 
+      height: 100%; 
+      z-index: 0; 
+    }
+
+    /* Brand Heading */
+    .brand {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      font-size: clamp(36px, 10vw, 72px);
+      font-weight: 700;
+      margin-top: 30px;
+      margin-bottom: 15px;
+      color: #ff4d4d;
+      text-shadow: 0 0 8px #ff1a1a;
+      animation: glowPulse 3s infinite alternate;
+    }
+
+    .brand::after {
+      content: "";
+      display: block;
+      width: 160px;
+      height: 3px;
+      margin: 8px auto 0;
+      background: #ff1a1a;
+      border-radius: 4px;
+      box-shadow: 0 0 8px #ff0000;
+    }
+
+    @keyframes glowPulse {
+      from { text-shadow: 0 0 6px #ff3333; }
+      to   { text-shadow: 0 0 15px #ff0000; }
+    }
+
+    /* Card */
+    .card {
+      position: relative; 
+      z-index: 2; 
+      width: 100%;
+      max-width: 850px; 
+      margin: 25px auto;
+      background: rgba(20, 0, 0, 0.8); 
+      border: 1px solid #ff3c3c;
+      border-radius: 16px; 
+      padding: 20px; 
+      text-align: center;
+      box-shadow: 0 0 12px rgba(255,0,0,0.4) inset;
+      backdrop-filter: blur(12px);
+      animation: floatCard 5s ease-in-out infinite;
+    }
+
+    @keyframes floatCard {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .card h1 { 
+      font-size: clamp(18px, 4vw, 28px); 
+      margin-bottom: 20px; 
+      color: #ff6666;
+      text-shadow: 0 0 6px #ff1a1a;
+    }
+
+    .card input, 
+    .card select, 
+    .card button {
+      width: 100%; 
+      padding: 12px; 
+      border: 1px solid #ff3c3c;
+      border-radius: 10px; 
+      background: #1a0000; 
+      color: #ff4d4d;
+      font-size: 16px; 
+      margin-bottom: 15px; 
+      transition: all 0.25s ease-in-out;
+    }
+
+    .card input:focus, 
+    .card select:focus {
+      outline: none;
+      box-shadow: 0 0 12px #ff1a1a;
+    }
+
+    .card button {
+      cursor: pointer;
+      font-weight: bold;
+      background: linear-gradient(90deg, #ff1a1a, #800000);
+      transition: all 0.3s ease-in-out;
+    }
+
+    .card button:hover {
+      background: #ff0000;
+      color: #000;
+      transform: scale(1.05);
+      box-shadow: 0 0 18px #ff1a1a;
+    }
+
+    .byte-count { 
+      font-size: 16px; 
+      margin-bottom: 18px; 
+      color: #ff8080;
+      text-shadow: 0 0 4px #ff3333;
+    }
+
+    pre {
+      padding: 12px; 
+      border: 1px solid #ff3c3c; 
+      border-radius: 10px;
+      background: #0d0000; 
+      color: #ffcccc; 
+      font-size: 14px;
+      overflow-x: auto; 
+      white-space: pre-wrap; 
+      box-shadow: 0 0 10px rgba(255,0,0,0.4);
+    }
+
+    .footer {
+      margin: 25px 0;
+      font-size: 14px;
+      color: #ff4d4d;
+      text-align: center;
+      font-family: Consolas, monospace;
+      position: relative;
+      z-index: 2;
+      opacity: 0.8;
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 480px) {
+      .brand { font-size: 42px; }
+      .card { padding: 15px; }
+      pre { font-size: 13px; }
+      .footer { font-size: 12px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="particles-js"></div>
+
+  <div id="scaleContainer">
+    <div class="brand">⚡ CYBERS ⚡</div>
+
+    <div class="card">
+      <h1>Magic Code Converter (C# ⇆ C++ ⇆ Python)</h1>
+      <select id="mode">
+        <option value="auto">Auto Detect</option>
+        <option value="cs2cpp">C# ➝ C++</option>
+        <option value="cpp2cs">C++ ➝ C#</option>
+        <option value="cs2py">C# ➝ Python</option>
+        <option value="cpp2py">C++ ➝ Python</option>
+        <option value="py2cs">Python ➝ C#</option>
+        <option value="py2cpp">Python ➝ C++</option>
+      </select>
+      <input id="aobInput" type="text" placeholder="Paste AOB (C#, C++ or Python)" />
+      <div class="byte-count" id="byteCount">BYTE COUNT: 0</div>
+      <pre id="output">Converted Code Will Go Here</pre>
+      <button id="copyBtn">Copy Output</button>
+    </div>
+
+    <div class="footer">🚀 Powered by CybERS 🚀</div>
+  </div>
+
+  <!-- Particle Background -->
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script>
+    // Particles
+    particlesJS("particles-js", {
+      "particles": {
+        "number": { "value": 60 },
+        "color": { "value": "#ff1a1a" },
+        "shape": { "type": "circle" },
+        "opacity": { "value": 0.4 },
+        "size": { "value": 2 },
+        "line_linked": { "enable": true, "distance": 120, "color": "#ff3333", "opacity": 0.3, "width": 1 },
+        "move": { "enable": true, "speed": 1.6 }
+      }
+    });
+
+    // Auto Zoom Out on Resize
+    function adjustZoom() {
+      const container = document.getElementById("scaleContainer");
+      if (window.innerWidth < 700 || window.innerHeight < 500) {
+        container.style.transform = "scale(0.9)";
+      } else {
+        container.style.transform = "scale(1)";
+      }
+    }
+
+    window.addEventListener("resize", adjustZoom);
+    window.addEventListener("load", adjustZoom);
+
+    // Converter Logic
+    const aobInput = document.getElementById("aobInput");
+    const output = document.getElementById("output");
+    const byteCount = document.getElementById("byteCount");
+    const modeSelect = document.getElementById("mode");
+    const copyBtn = document.getElementById("copyBtn");
+
+    function convert() {
+      const text = aobInput.value.trim();
+      const mode = modeSelect.value;
+
+      if (!text) {
+        output.textContent = "Converted Code Will Go Here";
+        byteCount.textContent = "BYTE COUNT: 0";
+        return;
+      }
+
+      let parts;
+      let result = [];
+      let count = 0;
+      let direction = mode;
+
+      if (mode === "auto") {
+        if (text.startsWith("b\"") || text.startsWith("b'")) direction = "py2cs";
+        else if (text.includes("0x")) direction = "cpp2cs";
+        else direction = "cs2cpp";
+      }
+
+      if (direction === "cpp2cs") {
+        parts = text.split(/,\s*/);
+        for (let part of parts) if (/^0x[0-9A-Fa-f]{2}$/.test(part)) { result.push(part.substring(2).toUpperCase()); count++; }
+        output.textContent = result.join(" ");
+      }
+
+      else if (direction === "cs2cpp") {
+        parts = text.split(/\s+/);
+        for (let part of parts) if (/^[A-Fa-f0-9]{2}$/.test(part)) { result.push("0x" + part.toUpperCase()); count++; }
+        output.textContent = result.join(", ");
+      }
+
+      else if (direction === "cs2py") {
+        parts = text.split(/\s+/);
+        for (let part of parts) if (/^[A-Fa-f0-9]{2}$/.test(part)) { result.push("\\x" + part.toUpperCase()); count++; }
+        output.textContent = 'b"' + result.join("") + '"';
+      }
+
+      else if (direction === "cpp2py") {
+        parts = text.split(/,\s*/);
+        for (let part of parts) if (/^0x[0-9A-Fa-f]{2}$/.test(part)) { result.push("\\x" + part.substring(2).toUpperCase()); count++; }
+        output.textContent = 'b"' + result.join("") + '"';
+      }
+
+      else if (direction === "py2cs") {
+        parts = text.replace(/^b["']|["']$/g, "").split(/\\x/).filter(Boolean);
+        for (let part of parts) if (/^[A-Fa-f0-9]{2}$/.test(part)) { result.push(part.toUpperCase()); count++; }
+        output.textContent = result.join(" ");
+      }
+
+      else if (direction === "py2cpp") {
+        parts = text.replace(/^b["']|["']$/g, "").split(/\\x/).filter(Boolean);
+        for (let part of parts) if (/^[A-Fa-f0-9]{2}$/.test(part)) { result.push("0x" + part.toUpperCase()); count++; }
+        output.textContent = result.join(", ");
+      }
+
+      byteCount.textContent = `BYTE COUNT: ${count}`;
+    }
+
+    copyBtn.addEventListener("click", () => {
+      navigator.clipboard.writeText(output.textContent).then(() => {
+        copyBtn.textContent = "✅ Copied!";
+        setTimeout(() => copyBtn.textContent = "Copy Output", 1500);
+      });
+    });
+
+    aobInput.addEventListener("input", convert);
+    modeSelect.addEventListener("change", convert);
+  </script>
+</body>
+</html>
